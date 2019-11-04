@@ -79,7 +79,7 @@ class Visits extends CI_Controller {
 
 	public function view($page = 'visits_list')
 	{
-
+		
         if ( ! file_exists(APPPATH.'views/visits/'.$page.'.php'))
         {
                 // Whoops, we don't have a page for that!

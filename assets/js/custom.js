@@ -2,6 +2,69 @@ var list_table;
 
 $( document ).ready( function(){
 
+	function validate_implantes_form(){
+
+		if( $( "#nombre_completo" ).val() == "" ){
+			alert( "Por favor ingrese nombre" );
+			$( "#nombre_completo" ).focus();
+			return false;
+		}
+
+		if( !validateEmail( $( "#email" ).val() ) ){
+			alert( "Por favor ingrese email valido" );
+			$( "#email" ).focus();
+			return false;
+		}
+
+		phone = $( "#phone" ).val();
+
+		if( phone == "" || phone.length < 10 ){
+			alert( "Por favor ingrese teléfono, minimo de 10 numeros" );
+			$( "#phone" ).focus();
+			return false;
+		}
+
+		if( $( ".policy-privacy-content.active" ).length == 0 ){
+			alert( "Debe aceptar las politicas de datos personales" );
+			$( "#subject" ).focus();
+			return false;
+		}
+
+		return true;
+
+	}
+
+	$( "#implantes_form" ).on( "submit", function(){
+
+		if( !validate_implantes_form() ){
+			return false;
+		}
+
+		$.post( site_url + "cotizacion/savecotizacion", { nombre_completo: $( "#nombre_completo" ).val(), email: $( "#email" ).val(), phone: $( "#phone" ).val() },function( data ){
+
+			if( data.success == "true" ){
+
+				$( ".degrade" ).hide();
+				$( ".confirmation-content" ).show();
+
+			}
+
+		}, "json" )
+
+		return false;
+
+	} )
+
+	$( ".policy-privacy-content" ).on( "click", function(){
+		if( $( this ).hasClass( "active" ) )
+			$( this ).removeClass( "active" )
+		else
+			$( this ).addClass( "active" )
+	} )
+
+	if( $('.slider').length > 0 )
+		$('.slider').slider({showInstruction: false});
+
 	$( "#add_visit" ).on( "click", function(){
 
 		$( "#visit_id" ).val( "" );
@@ -52,9 +115,11 @@ $( document ).ready( function(){
 
 	} )
 
-	list_table = $('#visits-list').DataTable({
-    	ajax:  site_url + "visits/list_process"
-    });
+	if( $('#visits-list').length > 0 ){
+		list_table = $('#visits-list').DataTable({
+	    	ajax:  site_url + "visits/list_process"
+	    });
+	}    
 
 } )
 
